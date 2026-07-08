@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Blockly for Music Programming with Sonic Pi</title>
+
+    <!-- Blockly Library -->
+    <script src="https://unpkg.com/blockly/blockly.min.js"></script>
+
+    <!-- CSS File -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- JavaScript File -->
+    <script src="script.js" defer></script>
+</head>
+
+<body>
+
+    <!-- Header Section -->
+    <header class="header">
+        <h1>Blockly for Music Programming with Sonic Pi</h1>
+        <p>A visual DSL for generating Sonic Pi music code</p>
+    </header>
+
+
+    <!-- Genre Selection Section -->
+    <section class="genre-section">
+        <h2>Choose a music style</h2>
+
+        <div class="genre-buttons">
+            <button class="genre-card" id="technoButton">
+                Techno
+            </button>
+
+            <button class="genre-card" id="houseButton">
+                House
+            </button>
+
+            <button class="genre-card disabled" disabled>
+                Ambient
+            </button>
+
+            <button class="genre-card disabled" disabled>
+                Experimental
+            </button>
+        </div>
+    </section>
+
+
+    <!-- Genre Information Section -->
+    <section class="genre-info">
+        <h2>Selected Genre Information</h2>
+        <p><strong>Description:</strong> <span id="descriptionText">Choose a genre to customize the workspace.</span>
+        <p><strong>Selected genre:</strong> <span id="selectedGenre">Techno</span></p>
+        <p><strong>Recommended BPM:</strong> <span id="recommendedBpm">140–170</span></p>
+        <p><strong>Supported blocks:</strong> <span id="supportedBlocks">BPM, Kick, Hi-hat, Bass</span></p>
+    </section>
+
+
+    <!-- Main App Section -->
+    <main class="app-container">
+
+        <!-- Left Panel -->
+        <section class="left-panel">
+            <h2>Music Blocks</h2>
+
+            <div id="blocklyDiv"></div>
+        </section>
+
+
+        <!-- Right Panel -->
+        <section class="right-panel">
+            <div class="code-header">
+                <h2>Generated Sonic Pi Code</h2>
+
+                <button id="copyButton">
+                    Copy Code
+                </button>
+            </div>
+
+            <pre id="output"><code>// Generated Sonic Pi code will appear here</code></pre>
+        </section>
+
+    </main>
+
+
+    <!-- Action Button Section -->
+    <section class="action-section">
+        <button id="generateButton">
+            Generate Code
+        </button>
+    </section>
+
+
+    <!-- Hidden Blockly Toolbox -->
+    <xml id="toolbox" style="display: none">
+
+        <category name="Techno Blocks" colour="#5C81A6">
+
+            <block type="set_bpm"></block>
+
+            <block type="kick_loop"></block>
+
+            <block type="hihat_loop"></block>
+
+            <block type="bass_loop"></block>
+
+        </category>
+
+    </xml>
+
+</body>
+
+</html>

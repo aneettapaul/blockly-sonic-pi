@@ -1,0 +1,430 @@
+/* ==============================
+   Global Page Style
+================================= */
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #0f0f0f;
+    color: #f2f2f2;
+    min-height: 100vh;
+}
+
+
+/* ==============================
+   Header Style
+================================= */
+
+.header {
+    text-align: center;
+    padding: 40px 20px;
+    background: linear-gradient(135deg, #1a1a1a, #2b0000);
+    border-bottom: 1px solid #3a3a3a;
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 36px;
+    font-weight: bold;
+    color: #ff3b3b;
+}
+
+.header p {
+    margin-top: 12px;
+    font-size: 18px;
+    color: #cccccc;
+}
+
+
+/* ==============================
+   Genre Selection Style
+================================= */
+
+.genre-section {
+    text-align: center;
+    padding: 30px 20px 15px;
+}
+
+.genre-section h2 {
+    margin-bottom: 20px;
+    font-size: 24px;
+}
+
+.genre-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.genre-card {
+    padding: 14px 26px;
+    border-radius: 12px;
+    border: 1px solid #555555;
+    background-color: #1f1f1f;
+    color: #ffffff;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.genre-card:hover {
+    background-color: #2d2d2d;
+    transform: translateY(-2px);
+}
+
+.genre-card.active {
+    background-color: #b30000;
+    border-color: #ff3b3b;
+    color: #ffffff;
+}
+
+.genre-card.disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+.genre-card.disabled:hover {
+    transform: none;
+    background-color: #1f1f1f;
+}
+
+
+/* ==============================
+   Genre Info Style
+================================= */
+
+.genre-info {
+    max-width: 900px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #181818;
+    border: 1px solid #333333;
+    border-radius: 14px;
+}
+
+.genre-info h2 {
+    margin-top: 0;
+    color: #ff3b3b;
+}
+
+.genre-info p {
+    margin: 10px 0;
+    color: #dddddd;
+}
+
+
+/* ==============================
+   Main Layout Style
+================================= */
+
+.app-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    padding: 30px;
+}
+
+.left-panel,
+.right-panel {
+    background-color: #181818;
+    border: 1px solid #333333;
+    border-radius: 14px;
+    padding: 20px;
+}
+
+.left-panel h2,
+.right-panel h2 {
+    margin-top: 0;
+    color: #ff3b3b;
+}
+
+
+/* ==============================
+   Blockly Workspace Style
+================================= */
+
+#blocklyDiv {
+    width: 100%;
+    height: 420px;
+    background-color: #222222;
+    border: 1px solid #444444;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+
+/* ==============================
+   Generated Code Box Style
+================================= */
+
+.code-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+}
+
+#output {
+    height: 420px;
+    margin: 0;
+    padding: 18px;
+    background-color: #050505;
+    color: #e6e6e6;
+    border: 1px solid #444444;
+    border-radius: 12px;
+    font-family: "Courier New", Courier, monospace;
+    font-size: 15px;
+    line-height: 1.5;
+
+    overflow: auto;
+    white-space: pre;
+}
+
+
+/* ==============================
+   Button Style
+================================= */
+
+button {
+    font-family: inherit;
+}
+
+#copyButton {
+    padding: 9px 16px;
+    border: none;
+    border-radius: 8px;
+    background-color: #b30000;
+    color: white;
+    cursor: pointer;
+    font-size: 14px;
+    transition: 0.2s ease;
+}
+
+#copyButton:hover {
+    background-color: #ff3b3b;
+}
+
+.action-section {
+    text-align: center;
+    padding: 10px 20px 40px;
+}
+
+#generateButton {
+    padding: 14px 32px;
+    border: none;
+    border-radius: 12px;
+    background-color: #b30000;
+    color: white;
+    font-size: 17px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+#generateButton:hover {
+    background-color: #ff3b3b;
+    transform: translateY(-2px);
+}
+
+
+/* ==============================
+   Default Music Platform Theme
+================================= */
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #f7f7fb;
+    min-height: 100vh;
+
+    background:
+        radial-gradient(circle at 15% 20%, rgba(99, 102, 241, 0.30), transparent 30%),
+        radial-gradient(circle at 85% 15%, rgba(20, 184, 166, 0.25), transparent 28%),
+        radial-gradient(circle at 50% 90%, rgba(236, 72, 153, 0.20), transparent 30%),
+        linear-gradient(135deg, #0f172a, #1e293b);
+}
+
+.header {
+    text-align: center;
+    padding: 42px 20px;
+    background: rgba(15, 23, 42, 0.75);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 36px;
+    color: #8be9fd;
+}
+
+.header p {
+    margin-top: 12px;
+    font-size: 18px;
+    color: #d6d6e7;
+}
+
+.genre-info,
+.left-panel,
+.right-panel {
+    background: rgba(15, 23, 42, 0.78);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.25);
+}
+
+.genre-info h2,
+.left-panel h2,
+.right-panel h2 {
+    color: #8be9fd;
+}
+
+.genre-card {
+    background-color: rgba(255, 255, 255, 0.08);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.genre-card:hover {
+    background-color: rgba(255, 255, 255, 0.16);
+}
+
+.genre-card.active {
+    background-color: #14b8a6;
+    border-color: #8be9fd;
+    color: #ffffff;
+}
+
+#generateButton,
+#copyButton {
+    background-color: #14b8a6;
+}
+
+#generateButton:hover,
+#copyButton:hover {
+    background-color: #2dd4bf;
+}
+
+
+/* ==============================
+   Techno Theme
+================================= */
+
+body.techno-theme {
+    background-color: #050505;
+    background-image: url("images/techno_bg.webp");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+/* Header should be dark and readable */
+body.techno-theme .header {
+    background-color: rgba(12, 0, 0, 0.92);
+    border-bottom: 1px solid rgba(255, 59, 59, 0.35);
+}
+
+/* Techno accent color */
+body.techno-theme .header h1,
+body.techno-theme .genre-info h2,
+body.techno-theme .left-panel h2,
+body.techno-theme .right-panel h2 {
+    color: #ff3b3b;
+}
+
+/* Make the working panels less transparent */
+body.techno-theme .genre-info,
+body.techno-theme .left-panel,
+body.techno-theme .right-panel {
+    background-color: rgba(15, 15, 15, 0.96);
+    border: 1px solid rgba(255, 59, 59, 0.30);
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.55);
+}
+
+/* Buttons */
+body.techno-theme .genre-card.active,
+body.techno-theme #generateButton,
+body.techno-theme #copyButton {
+    background-color: #b30000;
+    border-color: #ff3b3b;
+}
+
+body.techno-theme .genre-card.active:hover,
+body.techno-theme #generateButton:hover,
+body.techno-theme #copyButton:hover {
+    background-color: #ff3b3b;
+}
+
+/* Make the code box calmer */
+body.techno-theme #output {
+    background-color: #030303;
+    color: #eeeeee;
+    border-color: rgba(255, 59, 59, 0.35);
+}
+
+/* ==============================
+   House Theme
+================================= */
+
+body.house-theme {
+    background:
+        radial-gradient(circle at 15% 15%, rgba(251, 146, 60, 0.25), transparent 28%),
+        radial-gradient(circle at 85% 20%, rgba(168, 85, 247, 0.28), transparent 30%),
+        radial-gradient(circle at 50% 90%, rgba(244, 114, 182, 0.20), transparent 32%),
+        linear-gradient(135deg, #1e1b4b, #312e81);
+}
+
+body.house-theme .header {
+    background: linear-gradient(135deg, #312e81, #7c2d12);
+}
+
+body.house-theme .header h1,
+body.house-theme .genre-info h2,
+body.house-theme .left-panel h2,
+body.house-theme .right-panel h2 {
+    color: #fbbf24;
+}
+
+body.house-theme .genre-info,
+body.house-theme .left-panel,
+body.house-theme .right-panel {
+    background-color: rgba(30, 27, 75, 0.86);
+    border-color: rgba(251, 191, 36, 0.25);
+}
+
+body.house-theme .genre-card.active,
+body.house-theme #generateButton,
+body.house-theme #copyButton {
+    background-color: #f97316;
+    border-color: #fbbf24;
+}
+
+body.house-theme .genre-card.active:hover,
+body.house-theme #generateButton:hover,
+body.house-theme #copyButton:hover {
+    background-color: #fb923c;
+}
+
+/* ==============================
+   Responsive Layout
+================================= */
+
+@media (max-width: 900px) {
+    .app-container {
+        grid-template-columns: 1fr;
+        padding: 20px;
+    }
+
+    .header h1 {
+        font-size: 28px;
+    }
+
+    .header p {
+        font-size: 16px;
+    }
+
+    #blocklyDiv,
+    #output {
+        height: 360px;
+    }
+}
