@@ -39,13 +39,24 @@
                 House
             </button>
 
-            <button class="genre-card disabled" disabled>
+            <button class="genre-card" id="ambientButton">
                 Ambient
             </button>
 
-            <button class="genre-card disabled" disabled>
+            <button class="genre-card" id="experimentalButton">
                 Experimental
             </button>
+        </div>
+    </section>
+
+    <section class="starter-section">
+        <h2>Starter Programs</h2>
+
+        <div class="starter-buttons">
+            <button id="technoStarter">Techno Starter</button>
+            <button id="houseStarter">House Starter</button>
+            <button id="ambientStarter">Ambient Starter</button>
+            <button id="experimentalStarter">Experimental Starter</button>
         </div>
     </section>
 
@@ -95,12 +106,14 @@
     </section>
 
 
-    <!-- Hidden Blockly Toolbox -->
-    <xml id="toolbox" style="display: none">
+    <!-- Techno Toolbox -->
+    <xml id="technoToolbox" style="display: none">
 
         <category name="Techno Blocks" colour="#5C81A6">
 
             <block type="set_bpm"></block>
+
+            <block type="use_synth"></block>
 
             <block type="kick_loop"></block>
 
@@ -108,9 +121,79 @@
 
             <block type="bass_loop"></block>
 
+            <block type="play_note"></block>
+
+            <block type="repeat_music"></block>
+
+            <block type="reverb_effect"></block>
+
+
         </category>
 
     </xml>
+
+    <!-- House Toolbox -->
+    <xml id="houseToolbox" style="display: none">
+
+        <category name="House Blocks" colour="#FF9800">
+
+            <block type="set_bpm"></block>
+
+            <block type="use_synth"></block>
+
+            <block type="house_kick_loop"></block>
+
+            <block type="clap_loop"></block>
+
+            <block type="minor7_chord_loop"></block>
+
+            <block type="repeat_music"></block>
+
+            <block type="reverb_effect"></block>
+
+        </category>
+
+    </xml>
+
+    <xml id="ambientToolbox" style="display: none">
+
+    <category name="Ambient Blocks" colour="#7E57C2">
+
+        <block type="set_bpm"></block>
+
+        <block type="use_synth"></block>
+
+        <block type="ambient_pad_loop"></block>
+
+        <block type="ambient_note_loop"></block>
+
+        <block type="repeat_music"></block>
+
+        <block type="reverb_effect"></block>
+
+    </category>
+
+</xml>
+
+<!-- Experimental Toolbox -->
+<xml id="experimentalToolbox" style="display: none">
+
+    <category name="Experimental Blocks" colour="#E91E63">
+
+        <block type="set_bpm"></block>
+        <block type="use_synth"></block>
+        <block type="play_note"></block>
+        <block type="random_note"></block>
+        <block type="experimental_rhythm"></block>
+        <block type="repeat_music"></block>
+        <block type="reverb_effect"></block>
+
+    </category>
+
+</xml>
+
+
+
 
 </body>
 
