@@ -6,7 +6,7 @@ The main idea is to make music programming more beginner-friendly by allowing us
 
 ## Project Idea
 
-The website works as a small visual DSL for Sonic Pi.
+The website works as a small visual DSL for Sonic Pi..
 
 Users can choose a music genre, drag music blocks into the Blockly workspace, and generate executable Sonic Pi code from those blocks.
 
