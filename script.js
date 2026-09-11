@@ -715,9 +715,6 @@ function switchBlocklyToolbox(genre) {
   // Change toolbox
   workspace.updateToolbox(toolbox);
 
-  // Remove old starter blocks from previous genre
-  workspace.clear();
-
   console.log("Loaded toolbox:", genre);
 }
 
@@ -761,14 +758,41 @@ document.addEventListener("DOMContentLoaded", function () {
   const generateButton = document.getElementById("generateButton");
 
   if (generateButton) {
-    generateButton.addEventListener("click", function () {
+    generateButton.addEventListener("click", function (event) {
+      event.preventDefault();
+
       let code = generateWorkspaceCode();
 
       document.getElementById("output").textContent = code;
+
+      sendCodeToHelper(code);
     });
   }
 });
 
+function sendCodeToHelper(code) {
+  fetch("http://127.0.0.1:5000/receive-code", {
+    method: "POST",
+
+    headers: {
+      "Content-Type": "application/json",
+    },
+
+    body: JSON.stringify({
+      code: code,
+    }),
+  })
+    .then((response) => {
+      console.log("Response received");
+      return response.json();
+    })
+    .then((data) => {
+      console.log(data);
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+}
 /* =====================================================
    GENERATE WORKSPACE CODE
 ===================================================== */

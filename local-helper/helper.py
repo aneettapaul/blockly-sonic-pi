@@ -1,11 +1,15 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-
+from pythonosc import udp_client
 
 app = Flask(__name__)
 
 # Allow your website to communicate with Flask
 CORS(app)
+client = udp_client.SimpleUDPClient(
+    "127.0.0.1",
+    4560
+)
 
 
 @app.route("/receive-code", methods=["POST"])
@@ -30,6 +34,12 @@ def receive_code():
     with open("generated_music.rb", "w") as file:
         file.write(code)
 
+    client.send_message(
+        "/sonic-code",
+        code
+    )
+
+    print("Code sent to Sonic Pi")
     print("Code saved successfully")
 
     return jsonify({
