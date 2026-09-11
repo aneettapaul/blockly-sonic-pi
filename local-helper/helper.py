@@ -15,13 +15,26 @@ def receive_code():
 
     code = data.get("code")
 
+    if not code or code.strip() == "":
+        return jsonify({
+            "status": "error",
+            "message": "No Sonic Pi code received"
+        })
+
     print("====================")
     print("Received Sonic Pi code:")
     print(code)
     print("====================")
 
+    # Save code into file
+    with open("generated_music.rb", "w") as file:
+        file.write(code)
+
+    print("Code saved successfully")
+
     return jsonify({
-        "status": "success"
+        "status": "success",
+        "message": "Code received and saved"
     })
 
 
