@@ -1,200 +1,189 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <title>Blockly for Music Programming with Sonic Pi</title>
 
     <!-- Blockly Library -->
     <script src="https://unpkg.com/blockly/blockly.min.js"></script>
 
-    <!-- CSS File -->
-    <link rel="stylesheet" href="style.css">
+    <!-- CSS -->
+    <link rel="stylesheet" href="style.css" />
 
-    <!-- JavaScript File -->
+    <!-- JavaScript -->
     <script src="script.js" defer></script>
-</head>
+  </head>
 
-<body>
-
-    <!-- Header Section -->
+  <body>
     <header class="header">
-        <h1>Blockly for Music Programming with Sonic Pi</h1>
-        <p>A visual DSL for generating Sonic Pi music code</p>
+      <h1>Blockly for Music Programming with Sonic Pi</h1>
+
+      <p>A visual DSL for generating Sonic Pi music code</p>
     </header>
 
-
-    <!-- Genre Selection Section -->
     <section class="genre-section">
-        <h2>Choose a music style</h2>
+      <h2>Choose a music style</h2>
 
-        <div class="genre-buttons">
-            <button class="genre-card" id="technoButton">
-                Techno
-            </button>
+      <div class="genre-buttons">
+        <button class="genre-card active" id="technoButton">Techno</button>
 
-            <button class="genre-card" id="houseButton">
-                House
-            </button>
+        <button class="genre-card" id="houseButton">House</button>
 
-            <button class="genre-card" id="ambientButton">
-                Ambient
-            </button>
+        <button class="genre-card" id="ambientButton">Ambient</button>
 
-            <button class="genre-card" id="experimentalButton">
-                Experimental
-            </button>
-        </div>
+        <button class="genre-card" id="experimentalButton">Experimental</button>
+      </div>
     </section>
 
-    <section class="starter-section">
-        <h2>Starter Programs</h2>
-
-        <div class="starter-buttons">
-            <button id="technoStarter">Techno Starter</button>
-            <button id="houseStarter">House Starter</button>
-            <button id="ambientStarter">Ambient Starter</button>
-            <button id="experimentalStarter">Experimental Starter</button>
-        </div>
-    </section>
-
-
-    <!-- Genre Information Section -->
     <section class="genre-info">
-        <h2>Selected Genre Information</h2>
-        <p><strong>Description:</strong> <span id="descriptionText">Choose a genre to customize the workspace.</span>
-        <p><strong>Selected genre:</strong> <span id="selectedGenre">Techno</span></p>
-        <p><strong>Recommended BPM:</strong> <span id="recommendedBpm">140–170</span></p>
-        <p><strong>Supported blocks:</strong> <span id="supportedBlocks">BPM, Kick, Hi-hat, Bass</span></p>
+      <h2>Selected Genre Information</h2>
+
+      <p>
+        <strong>Description:</strong>
+
+        <span id="descriptionText">
+          High energy electronic music with strong kicks and bass.
+        </span>
+      </p>
+
+      <p>
+        <strong>Selected genre:</strong>
+
+        <span id="selectedGenre"> Techno </span>
+      </p>
+
+      <p>
+        <strong>Recommended BPM:</strong>
+
+        <span id="recommendedBpm"> 140-170 </span>
+      </p>
+
+      <p>
+        <strong>Supported blocks:</strong>
+
+        <span id="supportedBlocks"> BPM, Synth, Kick, Bass, Effects </span>
+      </p>
+
+      <button id="starterButton" class="starter-main-button">
+        Load Techno Starter
+      </button>
     </section>
 
-
-    <!-- Main App Section -->
     <main class="app-container">
+      <section class="left-panel">
+        <h2>Music Blocks</h2>
 
-        <!-- Left Panel -->
-        <section class="left-panel">
-            <h2>Music Blocks</h2>
+        <div id="blocklyDiv"></div>
+      </section>
 
-            <div id="blocklyDiv"></div>
-        </section>
+      <section class="right-panel">
+        <div class="code-header">
+          <h2>Generated Sonic Pi Code</h2>
 
+          <button id="copyButton">Copy Code</button>
+        </div>
 
-        <!-- Right Panel -->
-        <section class="right-panel">
-            <div class="code-header">
-                <h2>Generated Sonic Pi Code</h2>
-
-                <button id="copyButton">
-                    Copy Code
-                </button>
-            </div>
-
-            <pre id="output"><code>// Generated Sonic Pi code will appear here</code></pre>
-        </section>
-
+        <pre id="output"><code>
+// Generated Sonic Pi code will appear here
+</code></pre>
+      </section>
     </main>
 
-
-    <!-- Action Button Section -->
     <section class="action-section">
-        <button id="generateButton">
-            Generate Code
-        </button>
+      <button id="generateButton">Generate Code</button>
     </section>
 
+    <!-- =========================
+     TECHNO TOOLBOX
+========================= -->
 
-    <!-- Techno Toolbox -->
     <xml id="technoToolbox" style="display: none">
+      <category name="Techno Blocks" colour="#ff3b3b">
+        <block type="set_bpm"></block>
 
-        <category name="Techno Blocks" colour="#5C81A6">
+        <block type="use_synth"></block>
 
-            <block type="set_bpm"></block>
+        <block type="hard_kick_pattern"></block>
 
-            <block type="use_synth"></block>
+        <block type="industrial_hihat"></block>
 
-            <block type="kick_loop"></block>
+        <block type="techno_bassline"></block>
 
-            <block type="hihat_loop"></block>
+        <block type="techno_build_up"></block>
 
-            <block type="bass_loop"></block>
+        <block type="repeat_music"></block>
 
-            <block type="play_note"></block>
+        <block type="reverb_effect"></block>
 
-            <block type="repeat_music"></block>
+        <block type="play_sample"></block>
 
-            <block type="reverb_effect"></block>
-
-
-        </category>
-
+        <block type="play_note"></block>
+      </category>
     </xml>
 
-    <!-- House Toolbox -->
+    <!-- =========================
+     HOUSE TOOLBOX
+========================= -->
+
     <xml id="houseToolbox" style="display: none">
-
-        <category name="House Blocks" colour="#FF9800">
-
-            <block type="set_bpm"></block>
-
-            <block type="use_synth"></block>
-
-            <block type="house_kick_loop"></block>
-
-            <block type="clap_loop"></block>
-
-            <block type="minor7_chord_loop"></block>
-
-            <block type="repeat_music"></block>
-
-            <block type="reverb_effect"></block>
-
-        </category>
-
+      <category name="House Blocks" colour="#FF9800">
+        <block type="set_bpm"></block>
+        <block type="use_synth"></block>
+        <block type="play_sample"></block>
+        <block type="play_note"></block>
+        <block type="four_floor_kick"></block>
+        <block type="house_clap_groove"></block>
+        <block type="house_chord_progression"></block>
+        <block type="groove_bass"></block>
+      </category>
     </xml>
+
+    <!-- =========================
+     AMBIENT TOOLBOX
+========================= -->
 
     <xml id="ambientToolbox" style="display: none">
-
-    <category name="Ambient Blocks" colour="#7E57C2">
-
-        <block type="set_bpm"></block>
-
-        <block type="use_synth"></block>
-
-        <block type="ambient_pad_loop"></block>
-
-        <block type="ambient_note_loop"></block>
-
-        <block type="repeat_music"></block>
-
-        <block type="reverb_effect"></block>
-
-    </category>
-
-</xml>
-
-<!-- Experimental Toolbox -->
-<xml id="experimentalToolbox" style="display: none">
-
-    <category name="Experimental Blocks" colour="#E91E63">
-
+      <category name="Ambient Blocks" colour="#67e8f9">
         <block type="set_bpm"></block>
         <block type="use_synth"></block>
+        <block type="play_sample"></block>
         <block type="play_note"></block>
-        <block type="random_note"></block>
-        <block type="experimental_rhythm"></block>
+        <block type="pad_layer"></block>
+        <block type="ambient_texture"></block>
+        <block type="slow_melody"></block>
+        <block type="reverb_space"></block>
+
         <block type="repeat_music"></block>
+      </category>
+    </xml>
+
+    <!-- =========================
+     EXPERIMENTAL TOOLBOX
+========================= -->
+
+    <xml id="experimentalToolbox" style="display: none">
+      <category name="Experimental Blocks" colour="#ec4899">
+        <block type="set_bpm"></block>
+
+        <block type="use_synth"></block>
+
+        <block type="play_note"></block>
+        <block type="play_sample"></block>
+
+        <block type="random_rhythm"></block>
+
+        <block type="random_notes"></block>
+
+        <block type="effect_chain"></block>
+
+        <block type="noise_texture"></block>
+
+        <block type="repeat_music"></block>
+
         <block type="reverb_effect"></block>
-
-    </category>
-
-</xml>
-
-
-
-
-</body>
-
+      </category>
+    </xml>
+  </body>
 </html>

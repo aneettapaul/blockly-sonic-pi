@@ -1,777 +1,1140 @@
-// script.js
+/* =====================================================
+   Blockly Music Programming System
+===================================================== */
 
 let workspace;
 
-let currentSynth = "tb303";
+let selectedGenre = "techno";
 
-// Run everything after the page is fully loaded
+/* =====================================================
+   GENRE INFORMATION DATA
+===================================================== */
+
+const genreData = {
+  techno: {
+    description:
+      "High energy electronic music with strong kicks, basslines and repetitive rhythms.",
+
+    bpm: "140–170",
+
+    blocks: "BPM, Synth, Hard Kick Pattern, Bassline, Hi-hat, Build-up Effect",
+  },
+
+  house: {
+    description:
+      "Dance music style based on groove, four-on-the-floor rhythm and chord patterns.",
+
+    bpm: "120–130",
+
+    blocks: "BPM, Synth, Four-on-the-floor Kick, Clap Groove, Chords, Bass",
+  },
+
+  ambient: {
+    description:
+      "Atmospheric music focused on sound textures, pads and slow evolving melodies.",
+
+    bpm: "60–100",
+
+    blocks: "BPM, Synth, Pad Layer, Texture, Slow Melody, Reverb",
+  },
+
+  experimental: {
+    description:
+      "Creative sound exploration using randomness, unusual rhythms and effects.",
+
+    bpm: "Flexible",
+
+    blocks: "BPM, Synth, Random Rhythm, Random Notes, Effects, Noise Texture",
+  },
+};
+
+/* =====================================================
+   STARTER PROGRAMS
+===================================================== */
+
+const starterPrograms = {
+  techno: [
+    {
+      type: "set_bpm",
+
+      fields: {
+        BPM: 150,
+      },
+    },
+
+    {
+      type: "use_synth",
+
+      fields: {
+        SYNTH: "tb303",
+      },
+    },
+
+    {
+      type: "hard_kick_pattern",
+    },
+
+    {
+      type: "industrial_hihat",
+    },
+
+    {
+      type: "techno_bassline",
+    },
+
+    {
+      type: "techno_build_up",
+    },
+  ],
+
+  house: [
+    {
+      type: "set_bpm",
+
+      fields: {
+        BPM: 125,
+      },
+    },
+
+    {
+      type: "use_synth",
+
+      fields: {
+        SYNTH: "prophet",
+      },
+    },
+
+    {
+      type: "four_floor_kick",
+    },
+
+    {
+      type: "house_clap_groove",
+    },
+
+    {
+      type: "house_chord_progression",
+    },
+
+    {
+      type: "groove_bass",
+    },
+  ],
+
+  ambient: [
+    {
+      type: "set_bpm",
+
+      fields: {
+        BPM: 80,
+      },
+    },
+
+    {
+      type: "use_synth",
+
+      fields: {
+        SYNTH: "hollow",
+      },
+    },
+
+    {
+      type: "pad_layer",
+    },
+
+    {
+      type: "ambient_texture",
+    },
+
+    {
+      type: "slow_melody",
+    },
+
+    {
+      type: "reverb_space",
+    },
+  ],
+
+  experimental: [
+    {
+      type: "set_bpm",
+
+      fields: {
+        BPM: 100,
+      },
+    },
+
+    {
+      type: "use_synth",
+
+      fields: {
+        SYNTH: "mod_fm",
+      },
+    },
+
+    {
+      type: "random_rhythm",
+    },
+
+    {
+      type: "random_notes",
+    },
+
+    {
+      type: "effect_chain",
+    },
+
+    {
+      type: "noise_texture",
+    },
+  ],
+};
+
+/* =====================================================
+   PAGE LOAD
+===================================================== */
+
 document.addEventListener("DOMContentLoaded", function () {
-    defineMusicBlocks();
+  initializeBlockly();
 
-    workspace = Blockly.inject("blocklyDiv", {
-        toolbox: document.getElementById("technoToolbox").outerHTML,
-        trashcan: true,
-        scrollbars: true,
-        zoom: {
-            controls: true,
-            wheel: true,
-            startScale: 0.9,
-            maxScale: 1.5,
-            minScale: 0.5,
-            scaleSpeed: 1.1
-        }
-    });
+  setupGenreButtons();
 
-    
+  setupStarterButton();
 
-    
-
-    // Start with the normal music platform theme
-    selectGenre("home");
-
-    const technoButton = document.getElementById("technoButton");
-    const houseButton = document.getElementById("houseButton");
-    const ambientButton = document.getElementById("ambientButton");
-    const experimentalButton =document.getElementById("experimentalButton");
-    const generateButton = document.getElementById("generateButton");
-    const copyButton = document.getElementById("copyButton");
-
-    technoButton.addEventListener("click", function () {
-        selectGenre("techno");
-    });
-
-    houseButton.addEventListener("click", function () {
-        selectGenre("house");
-    });
-    
-    ambientButton.addEventListener("click", function () {
-        selectGenre("ambient");
-    });
-
-    if (experimentalButton) {
-        experimentalButton.addEventListener("click", function () {
-            selectGenre("experimental");
-        });
-    }
-
-    generateButton.addEventListener("click", function () {
-        generateSonicPiCode();
-    });
-
-    copyButton.addEventListener("click", function () {
-        copyGeneratedCode();
-    });
-
-    
-
-    // Starter Program buttons
-    document.getElementById("technoStarter").addEventListener("click", function () {
-        loadStarterProgram("techno");
-    });
-
-    document.getElementById("houseStarter").addEventListener("click", function () {
-        loadStarterProgram("house");
-    });
-
-    document.getElementById("ambientStarter").addEventListener("click", function () {
-        loadStarterProgram("ambient");
-    });
-
-    document.getElementById("experimentalStarter").addEventListener("click", function () {
-        loadStarterProgram("experimental");
-    });
-
+  updateGenreInformation("techno");
 });
 
-    
+/* =====================================================
+   GENRE BUTTON EVENTS
+===================================================== */
 
+function setupGenreButtons() {
+  const buttons = document.querySelectorAll(".genre-card");
 
+  buttons.forEach((button) => {
+    button.addEventListener("click", function () {
+      const genre = this.id.replace("Button", "");
 
-// ==============================
-// Genre Selection
-// ==============================
+      selectedGenre = genre;
 
-function selectGenre(genre) {
-    const selectedGenre = document.getElementById("selectedGenre");
-    const recommendedBpm = document.getElementById("recommendedBpm");
-    const supportedBlocks = document.getElementById("supportedBlocks");
-    const descriptionText = document.getElementById("descriptionText");
+      updateGenreInformation(genre);
 
-    // Remove old theme classes
-    document.body.classList.remove(
-        "techno-theme",
-        "house-theme",
-        "ambient-theme",
-        "experimental-theme"
-    );
+      changeTheme(genre);
 
-    // Remove active style from all genre buttons
-    const genreButtons = document.querySelectorAll(".genre-card");
-    genreButtons.forEach(function (button) {
-        button.classList.remove("active");
+      switchBlocklyToolbox(genre);
+
+      setActiveGenreButton(this);
+
+      updateStarterButton(genre);
     });
-
-    if (genre === "home") {
-        selectedGenre.textContent = "None";
-        recommendedBpm.textContent = "Choose a genre";
-        supportedBlocks.textContent = "Choose a genre first";
-        descriptionText.textContent = "Start by selecting a music style. The page theme and available music idea will change based on the selected genre.";
-    }
-
-    else if (genre === "techno") {
-        document.body.classList.add("techno-theme");
-
-        document.getElementById("technoButton").classList.add("active");
-
-        selectedGenre.textContent = "Techno";
-        recommendedBpm.textContent = "140–170";
-        supportedBlocks.textContent = "BPM, Kick, Hi-hat, Bass";
-        descriptionText.textContent = "Techno uses repeated kick drums, hi-hats, bass loops and a dark club-style sound.";
-        switchBlocklyToolbox("techno");
-    }
-
-    else if (genre === "house") {
-        document.body.classList.add("house-theme");
-
-        document.getElementById("houseButton").classList.add("active");
-        
-
-        selectedGenre.textContent = "House";
-        recommendedBpm.textContent = "120–130";
-        supportedBlocks.textContent = "BPM, Kick, Clap, Chord";
-        descriptionText.textContent = "House music usually has a warmer dance feeling, steady rhythm, claps, chords and groovy basslines.";
-
-        switchBlocklyToolbox("house");
-    }
-
-    else if (genre === "ambient") {
-    document.body.classList.add("ambient-theme");
-    document.getElementById("ambientButton").classList.add("active");
-
-    selectedGenre.textContent = "Ambient";
-    recommendedBpm.textContent = "60–90";
-    supportedBlocks.textContent = "BPM, Synth, Pad, Notes";
-
-    descriptionText.textContent =
-        "Ambient music uses slower tempos, sustained synth sounds, soft notes and atmospheric textures.";
-
-    switchBlocklyToolbox("ambient");
-    
-    }
-
-    else if (genre === "experimental") {
-    document.body.classList.add("experimental-theme");
-    document.getElementById("experimentalButton").classList.add("active");
-
-    selectedGenre.textContent = "Experimental";
-    recommendedBpm.textContent = "80–140";
-    supportedBlocks.textContent =
-        "BPM, Synth, Notes, Random Rhythm, Effects";
-
-    descriptionText.textContent =
-        "Experimental music uses unpredictable notes, irregular rhythms, different synths and effects.";
-
-    switchBlocklyToolbox("experimental");
-    
-    }
+  });
 }
 
-// ==============================
-// Starter Programs
-// ==============================
-function loadStarterProgram(genre) {
-    workspace.clear();
+function setActiveGenreButton(active) {
+  document.querySelectorAll(".genre-card").forEach((button) => {
+    button.classList.remove("active");
+  });
 
-    selectGenre(genre);
-
-    const starterBlocks = {
-        techno: [
-            ["set_bpm", { BPM: 150 }],
-            ["use_synth", { SYNTH: "tb303" }],
-            ["kick_loop", {}],
-            ["hihat_loop", { SLEEP: 0.5 }],
-            ["bass_loop", { NOTE: "e2" }]
-        ],
-
-        house: [
-            ["set_bpm", { BPM: 125 }],
-            ["use_synth", { SYNTH: "prophet" }],
-            ["house_kick_loop", {}],
-            ["clap_loop", {}],
-            ["minor7_chord_loop", {}]
-        ],
-
-        ambient: [
-            ["set_bpm", { BPM: 75 }],
-            ["use_synth", { SYNTH: "prophet" }],
-            ["ambient_pad_loop", {}],
-            ["ambient_note_loop", { NOTE: "c4" }]
-        ],
-
-        experimental: [
-            ["set_bpm", { BPM: 120 }],
-            ["use_synth", { SYNTH: "fm" }],
-            ["random_note", {}],
-            ["experimental_rhythm", {}]
-        ]
-    };
-
-    const blocks = starterBlocks[genre];
-
-    let previousBlock = null;
-
-    blocks.forEach(function (blockData, index) {
-        const block = workspace.newBlock(blockData[0]);
-
-        const fields = blockData[1];
-
-        Object.keys(fields).forEach(function (fieldName) {
-            block.setFieldValue(fields[fieldName], fieldName);
-        });
-
-        block.initSvg();
-        block.render();
-
-        block.moveBy(40, 40 + index * 90);
-
-        if (previousBlock !== null) {
-            previousBlock.nextConnection.connect(block.previousConnection);
-        }
-
-        previousBlock = block;
-    });
-
-    
+  active.classList.add("active");
 }
 
+/* =====================================================
+   UPDATE GENRE INFORMATION CARD
+===================================================== */
 
-// ==============================
-// Blockly Block Definitions
-// ==============================
+function updateGenreInformation(genre) {
+  const data = genreData[genre];
+
+  document.getElementById("descriptionText").textContent = data.description;
+
+  document.getElementById("selectedGenre").textContent =
+    genre.charAt(0).toUpperCase() + genre.slice(1);
+
+  document.getElementById("recommendedBpm").textContent = data.bpm;
+
+  document.getElementById("supportedBlocks").textContent = data.blocks;
+}
+
+function updateStarterButton(genre) {
+  const button = document.getElementById("starterButton");
+
+  if (!button) {
+    return;
+  }
+
+  const name = genre.charAt(0).toUpperCase() + genre.slice(1);
+
+  button.textContent = "Load " + name + " Starter";
+}
+
+/* =====================================================
+   THEME SWITCHING
+===================================================== */
+
+function changeTheme(genre) {
+  document.body.classList.remove(
+    "techno-theme",
+
+    "house-theme",
+
+    "ambient-theme",
+
+    "experimental-theme",
+  );
+
+  document.body.classList.add(genre + "-theme");
+}
+
+/* =====================================================
+   STARTER BUTTON
+===================================================== */
+
+function setupStarterButton() {
+  const button = document.getElementById("starterButton");
+
+  if (!button) return;
+
+  button.addEventListener("click", function () {
+    if (workspace) {
+      loadStarterProgram(selectedGenre);
+    }
+  });
+}
+
+/* =====================================================
+   INITIALIZE BLOCKLY
+===================================================== */
+
+function initializeBlockly() {
+  // First create all custom blocks
+  defineMusicBlocks();
+
+  // Then create Blockly workspace once
+  workspace = Blockly.inject("blocklyDiv", {
+    toolbox: document.getElementById("technoToolbox"),
+
+    theme: Blockly.Themes.Dark,
+
+    scrollbars: true,
+
+    trashcan: true,
+
+    zoom: {
+      controls: true,
+      wheel: false,
+      startScale: 1,
+      maxScale: 2,
+      minScale: 0.5,
+    },
+  });
+}
+
+/* =====================================================
+   BLOCK DEFINITIONS
+===================================================== */
 
 function defineMusicBlocks() {
+  /* ==========================
+       SHARED BLOCKS
+    ========================== */
 
-    Blockly.Blocks["set_bpm"] = {
-        init: function () {
-            this.appendDummyInput()
-                .appendField("set BPM")
-                .appendField(new Blockly.FieldNumber(150, 60, 220, 1), "BPM");
+  Blockly.Blocks["set_bpm"] = {
+    init: function () {
+      this.appendDummyInput()
 
-            this.setPreviousStatement(true, null);
-            this.setNextStatement(true, null);
-            this.setColour(0);
-            this.setTooltip("Set the tempo of the Sonic Pi song.");
-            this.setHelpUrl("");
-        }
-    };
+        .appendField("Set BPM")
 
-    Blockly.Blocks["use_synth"] = {
-        init: function () {
-            this.appendDummyInput()
-                .appendField("use synth")
-                .appendField(new Blockly.FieldDropdown([
-                ["TB303", "tb303"],
-                ["Prophet", "prophet"],
-                ["FM", "fm"],
-                ["Pulse", "pulse"],
-                ["Saw", "saw"]
-                ]), "SYNTH");
+        .appendField(new Blockly.FieldNumber(120, 60, 180, 1), "BPM");
 
-            this.setPreviousStatement(true, null);
-            this.setNextStatement(true, null);
-            this.setColour(210);
-            this.setTooltip("Choose the synthesizer for Sonic Pi.");
-            this.setHelpUrl("");
-        }
-    };
+      this.setPreviousStatement(true);
 
+      this.setNextStatement(true);
 
-    Blockly.Blocks["kick_loop"] = {
-        init: function () {
-            this.appendDummyInput()
-                .appendField("hard techno kick loop");
+      this.setColour("#4CAF50");
+    },
+  };
 
-            this.setPreviousStatement(true, null);
-            this.setNextStatement(true, null);
-            this.setColour(15);
-            this.setTooltip("Creates a repeated techno kick drum loop.");
-            this.setHelpUrl("");
-        }
-    };
+  Blockly.Blocks["use_synth"] = {
+    init: function () {
+      this.appendDummyInput()
 
+        .appendField("Use Synth")
 
-    Blockly.Blocks["hihat_loop"] = {
-        init: function () {
-            this.appendDummyInput()
-                .appendField("hi-hat every")
-                .appendField(new Blockly.FieldNumber(0.5, 0.25, 4, 0.25), "SLEEP")
-                .appendField("beats");
+        .appendField(
+          new Blockly.FieldDropdown([
+            ["Beep", "beep"],
+            ["TB-303 Bass", "tb303"],
+            ["Prophet", "prophet"],
+            ["Hollow", "hollow"],
+            ["FM Synth", "mod_fm"],
+            ["Piano", "piano"],
+            ["Blade", "blade"],
+          ]),
+          "SYNTH",
+        );
 
-            this.setPreviousStatement(true, null);
-            this.setNextStatement(true, null);
-            this.setColour(45);
-            this.setTooltip("Creates a repeated closed hi-hat loop.");
-            this.setHelpUrl("");
-        }
-    };
+      this.setPreviousStatement(true);
 
+      this.setNextStatement(true);
 
-    Blockly.Blocks["bass_loop"] = {
-        init: function () {
-            this.appendDummyInput()
-                .appendField("bass loop note")
-                .appendField(new Blockly.FieldDropdown([
-                    ["E2", "e2"],
-                    ["F2", "f2"],
-                    ["G2", "g2"],
-                    ["A2", "a2"],
-                    ["C3", "c3"]
-                ]), "NOTE");
+      this.setColour("#673AB7");
+    },
+  };
 
-            this.setPreviousStatement(true, null);
-            this.setNextStatement(true, null);
-            this.setColour(260);
-            this.setTooltip("Creates a simple acid-style bass loop.");
-            this.setHelpUrl("");
-        }
-    };
+  Blockly.Blocks["play_note"] = {
+    init: function () {
+      this.appendDummyInput()
 
-    Blockly.Blocks["house_kick_loop"] = {
-        init: function () {
-            this.appendDummyInput()
-                .appendField("house kick loop");
+        .appendField("Play Note")
 
-            this.setPreviousStatement(true, null);
-            this.setNextStatement(true, null);
-            this.setColour(30);
-            this.setTooltip("Creates a steady four-on-the-floor house kick.");
-            this.setHelpUrl("");
-        }
-    };
+        .appendField(
+          new Blockly.FieldDropdown([
+            ["C4", "c4"],
+            ["D4", "d4"],
+            ["E4", "e4"],
+            ["F4", "f4"],
+            ["G4", "g4"],
+            ["A4", "a4"],
+            ["C5", "c5"],
+          ]),
+          "NOTE",
+        );
 
-    Blockly.Blocks["clap_loop"] = {
-        init: function () {
-            this.appendDummyInput()
-                .appendField("clap every 2 beats");
+      this.setPreviousStatement(true);
 
-            this.setPreviousStatement(true, null);
-            this.setNextStatement(true, null);
-            this.setColour(60);
-            this.setTooltip("Creates a regular house clap rhythm.");
-            this.setHelpUrl("");
-        }
-    };
+      this.setNextStatement(true);
 
+      this.setColour("#2196F3");
+    },
+  };
 
-    Blockly.Blocks["minor7_chord_loop"] = {
-        init: function () {
-            this.appendDummyInput()
-                .appendField("minor 7 chord loop");
+  Blockly.Blocks["repeat_music"] = {
+    init: function () {
+      this.appendDummyInput()
 
-            this.setPreviousStatement(true, null);
-            this.setNextStatement(true, null);
-            this.setColour(300);
-            this.setTooltip("Creates a repeating minor seventh chord.");
-            this.setHelpUrl("");
-    
-        }
-    };
+        .appendField("Repeat Music");
 
+      this.setPreviousStatement(true);
 
-    Blockly.Blocks["ambient_pad_loop"] = {
-        init: function () {
-            this.appendDummyInput()
-                .appendField("ambient pad loop");
+      this.setNextStatement(true);
 
-            this.setPreviousStatement(true, null);
-            this.setNextStatement(true, null);
-            this.setColour(280);
+      this.setColour("#009688");
+    },
+  };
 
-            this.setTooltip("Creates a slow atmospheric ambient pad loop.");
-            this.setHelpUrl("");
-        }
-    };
+  Blockly.Blocks["reverb_effect"] = {
+    init: function () {
+      this.appendDummyInput()
 
-    Blockly.Blocks["ambient_note_loop"] = {
-        init: function () {
-            this.appendDummyInput()
-                .appendField("ambient note")
-                .appendField(new Blockly.FieldDropdown([
-                    ["C4", "c4"],
-                    ["D4", "d4"],
-                    ["E4", "e4"],
-                    ["G4", "g4"],
-                    ["A4", "a4"]
-                ]), "NOTE");
+        .appendField("Add Reverb Effect");
 
-            this.setPreviousStatement(true, null);
-            this.setNextStatement(true, null);
-            this.setColour(290);
+      this.setPreviousStatement(true);
 
-            this.setTooltip("Creates a slow repeating ambient note.");
-            this.setHelpUrl("");
-        }
-    };
+      this.setNextStatement(true);
 
-    Blockly.Blocks["play_note"] = {
-        init: function () {
-            this.appendDummyInput()
-                .appendField("play note")
-                .appendField(new Blockly.FieldDropdown([
-                    ["C4", "c4"],
-                    ["D4", "d4"],
-                    ["E4", "e4"],
-                    ["G4", "g4"],
-                    ["A4", "a4"]
-                ]), "NOTE");
+      this.setColour("#9C27B0");
+    },
+  };
 
-            this.appendDummyInput()
-                .appendField("sleep")
-                .appendField(
-                    new Blockly.FieldNumber(1, 0.25, 8, 0.25),
-                    "SLEEP"
-                )
-                .appendField("beats");
+  Blockly.Blocks["play_sample"] = {
+    init: function () {
+      this.appendDummyInput()
+        .appendField("Play Sample")
+        .appendField(
+          new Blockly.FieldDropdown([
+            ["Techno Kick", "bd_tek"],
+            ["House Kick", "bd_haus"],
+            ["Heavy Kick", "bd_boom"],
+            ["Clap", "perc_snap"],
+            ["Hi Hat", "drum_cymbal_closed"],
+            ["Ambient Texture", "ambi_soft_buzz"],
+          ]),
+          "SAMPLE",
+        );
 
-            this.setPreviousStatement(true, null);
-            this.setNextStatement(true, null);
-            this.setColour(200);
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
 
-            this.setTooltip(
-                "Plays one note for a finite amount of time."
-            );
+      this.setColour("#9C27B0");
+    },
+  };
 
-            this.setHelpUrl("");
-        }
-    };
+  /* ==========================
+       TECHNO BLOCKS
+    ========================== */
 
-    Blockly.Blocks["repeat_music"] = {
-        init: function () {
-            this.appendDummyInput()
-                .appendField("repeat")
-                .appendField(
-                    new Blockly.FieldNumber(4, 1, 16, 1),
-                    "TIMES"
-                )
-                .appendField("times");
+  Blockly.Blocks["hard_kick_pattern"] = {
+    init: function () {
+      this.appendDummyInput()
 
-            this.appendStatementInput("DO")
-                .setCheck(null)
-                .appendField("do");
+        .appendField("Hard Kick Pattern");
 
-            this.setPreviousStatement(true, null);
-            this.setNextStatement(true, null);
-            this.setColour(120);
+      this.setPreviousStatement(true);
 
-            this.setTooltip("Repeat the music blocks inside this block.");
-            this.setHelpUrl("");
-            }
-    };
+      this.setNextStatement(true);
 
-    Blockly.Blocks["reverb_effect"] = {
-        init: function () {
-            this.appendDummyInput()
-                .appendField("add reverb");
+      this.setColour("#ff3b3b");
+    },
+  };
 
-            this.appendStatementInput("DO")
-                .setCheck(null)
-                .appendField("effect");
+  Blockly.Blocks["techno_bassline"] = {
+    init: function () {
+      this.appendDummyInput()
 
-            this.setPreviousStatement(true, null);
-            this.setNextStatement(true, null);
-            this.setColour(160);
+        .appendField("Techno Bassline");
 
-            this.setTooltip("Adds a reverb effect to the music blocks inside.");
-            this.setHelpUrl("");
-        }
-    };
+      this.setPreviousStatement(true);
 
-    Blockly.Blocks["random_note"] = {
-        init: function () {
-            this.appendDummyInput()
-                .appendField("random experimental note");
+      this.setNextStatement(true);
 
-            this.setPreviousStatement(true, null);
-            this.setNextStatement(true, null);
-            this.setColour(330);
+      this.setColour("#ff3b3b");
+    },
+  };
 
-            this.setTooltip("Plays a randomly selected note.");
-            this.setHelpUrl("");
-        }
-    };
+  Blockly.Blocks["industrial_hihat"] = {
+    init: function () {
+      this.appendDummyInput()
 
-    Blockly.Blocks["experimental_rhythm"] = {
-        init: function () {
-            this.appendDummyInput()
-                .appendField("experimental rhythm");
+        .appendField("Industrial Hi-hat");
 
-            this.setPreviousStatement(true, null);
-            this.setNextStatement(true, null);
-            this.setColour(350);
+      this.setPreviousStatement(true);
 
-            this.setTooltip("Creates an irregular rhythmic pattern.");
-            this.setHelpUrl("");
-        }
-    };
+      this.setNextStatement(true);
+
+      this.setColour("#ff3b3b");
+    },
+  };
+
+  Blockly.Blocks["techno_build_up"] = {
+    init: function () {
+      this.appendDummyInput()
+
+        .appendField("Techno Build-up Effect");
+
+      this.setPreviousStatement(true);
+
+      this.setNextStatement(true);
+
+      this.setColour("#ff3b3b");
+    },
+  };
+
+  /* ==========================
+       HOUSE BLOCKS
+    ========================== */
+
+  Blockly.Blocks["four_floor_kick"] = {
+    init: function () {
+      this.appendDummyInput()
+
+        .appendField("Four-on-the-floor Kick");
+
+      this.setPreviousStatement(true);
+
+      this.setNextStatement(true);
+
+      this.setColour("#f97316");
+    },
+  };
+
+  Blockly.Blocks["house_clap_groove"] = {
+    init: function () {
+      this.appendDummyInput()
+
+        .appendField("House Clap Groove");
+
+      this.setPreviousStatement(true);
+
+      this.setNextStatement(true);
+
+      this.setColour("#f97316");
+    },
+  };
+
+  Blockly.Blocks["house_chord_progression"] = {
+    init: function () {
+      this.appendDummyInput()
+
+        .appendField("House Chord Progression");
+
+      this.setPreviousStatement(true);
+
+      this.setNextStatement(true);
+
+      this.setColour("#f97316");
+    },
+  };
+
+  Blockly.Blocks["groove_bass"] = {
+    init: function () {
+      this.appendDummyInput()
+
+        .appendField("Groove Bass");
+
+      this.setPreviousStatement(true);
+
+      this.setNextStatement(true);
+
+      this.setColour("#f97316");
+    },
+  };
+
+  /* ==========================
+       AMBIENT BLOCKS
+    ========================== */
+
+  Blockly.Blocks["pad_layer"] = {
+    init: function () {
+      this.appendDummyInput()
+
+        .appendField("Pad Layer");
+
+      this.setPreviousStatement(true);
+
+      this.setNextStatement(true);
+
+      this.setColour("#67e8f9");
+    },
+  };
+
+  Blockly.Blocks["ambient_texture"] = {
+    init: function () {
+      this.appendDummyInput()
+
+        .appendField("Atmospheric Texture");
+
+      this.setPreviousStatement(true);
+
+      this.setNextStatement(true);
+
+      this.setColour("#67e8f9");
+    },
+  };
+
+  Blockly.Blocks["slow_melody"] = {
+    init: function () {
+      this.appendDummyInput()
+
+        .appendField("Slow Melody");
+
+      this.setPreviousStatement(true);
+
+      this.setNextStatement(true);
+
+      this.setColour("#67e8f9");
+    },
+  };
+
+  Blockly.Blocks["reverb_space"] = {
+    init: function () {
+      this.appendDummyInput()
+
+        .appendField("Reverb Space");
+
+      this.setPreviousStatement(true);
+
+      this.setNextStatement(true);
+
+      this.setColour("#67e8f9");
+    },
+  };
+
+  /* ==========================
+       EXPERIMENTAL BLOCKS
+    ========================== */
+
+  Blockly.Blocks["random_rhythm"] = {
+    init: function () {
+      this.appendDummyInput()
+
+        .appendField("Random Rhythm");
+
+      this.setPreviousStatement(true);
+
+      this.setNextStatement(true);
+
+      this.setColour("#f472b6");
+    },
+  };
+
+  Blockly.Blocks["random_notes"] = {
+    init: function () {
+      this.appendDummyInput()
+
+        .appendField("Random Notes");
+
+      this.setPreviousStatement(true);
+
+      this.setNextStatement(true);
+
+      this.setColour("#f472b6");
+    },
+  };
+
+  Blockly.Blocks["effect_chain"] = {
+    init: function () {
+      this.appendDummyInput()
+
+        .appendField("Experimental Effect Chain");
+
+      this.setPreviousStatement(true);
+
+      this.setNextStatement(true);
+
+      this.setColour("#f472b6");
+    },
+  };
+
+  Blockly.Blocks["noise_texture"] = {
+    init: function () {
+      this.appendDummyInput()
+
+        .appendField("Noise Texture");
+
+      this.setPreviousStatement(true);
+
+      this.setNextStatement(true);
+
+      this.setColour("#f472b6");
+    },
+  };
 }
+
+/* =====================================================
+   SWITCH BLOCKLY TOOLBOX
+===================================================== */
 
 function switchBlocklyToolbox(genre) {
+  const toolbox = document.getElementById(genre + "Toolbox");
 
-    if (genre === "techno") {
-        const toolbox = document.getElementById("technoToolbox");
-        workspace.updateToolbox(toolbox.outerHTML);
-    }
+  if (!toolbox || !workspace) {
+    console.log("Toolbox missing:", genre);
+    return;
+  }
 
-    if (genre === "house") {
-        const toolbox = document.getElementById("houseToolbox");
-        workspace.updateToolbox(toolbox.outerHTML);
-    }
+  // Change toolbox
+  workspace.updateToolbox(toolbox);
 
-    if (genre === "ambient") {
-        const toolbox = document.getElementById("ambientToolbox");
-        workspace.updateToolbox(toolbox.outerHTML);
-    }
+  // Remove old starter blocks from previous genre
+  workspace.clear();
 
-    if (genre === "experimental") {
-        const toolbox = document.getElementById("experimentalToolbox");
-
-        if (toolbox) {
-            workspace.updateToolbox(toolbox.outerHTML);
-        }
-    }
+  console.log("Loaded toolbox:", genre);
 }
 
+/* =====================================================
+   LOAD STARTER PROGRAM
+===================================================== */
 
-// ==============================
-// Code Generation
-// ==============================
+function loadStarterProgram(genre) {
+  workspace.clear();
 
-function generateSonicPiCode() {
-    currentSynth = "tb303";
-    let generatedCode = "";
+  let blocks = starterPrograms[genre];
 
-    const topBlocks = workspace.getTopBlocks(true);
+  let previousBlock = null;
 
-    topBlocks.forEach(function (block) {
-        generatedCode += generateCodeFromBlockStack(block);
+  blocks.forEach((blockData) => {
+    let block = workspace.newBlock(blockData.type);
+
+    if (blockData.fields) {
+      Object.keys(blockData.fields).forEach((field) => {
+        block.setFieldValue(blockData.fields[field], field);
+      });
+    }
+
+    block.initSvg();
+    block.render();
+
+    // connect blocks vertically
+    if (previousBlock) {
+      previousBlock.nextConnection.connect(block.previousConnection);
+    }
+
+    previousBlock = block;
+  });
+}
+
+/* =====================================================
+   GENERATE CODE BUTTON
+===================================================== */
+
+document.addEventListener("DOMContentLoaded", function () {
+  const generateButton = document.getElementById("generateButton");
+
+  if (generateButton) {
+    generateButton.addEventListener("click", function () {
+      let code = generateWorkspaceCode();
+
+      document.getElementById("output").textContent = code;
     });
+  }
+});
 
-    if (generatedCode.trim() === "") {
-        generatedCode = "// Drag some music blocks into the workspace first.";
-    }
+/* =====================================================
+   GENERATE WORKSPACE CODE
+===================================================== */
+function generateWorkspaceCode() {
+  let code = "";
 
-    document.getElementById("output").textContent = generatedCode;
-}
+  let blocks = workspace.getTopBlocks(true);
 
-
-// This function follows connected blocks from top to bottom
-function generateCodeFromBlockStack(block) {
-    let code = "";
+  blocks.forEach((block) => {
     let currentBlock = block;
 
-    while (currentBlock !== null) {
-        code += generateCodeForBlock(currentBlock);
-        currentBlock = currentBlock.getNextBlock();
-    }
+    while (currentBlock) {
+      code += generateCodeForBlock(currentBlock);
 
-    return code;
+      currentBlock = currentBlock.getNextBlock();
+    }
+  });
+
+  return code;
 }
 
+/* =====================================================
+   SONIC PI CODE GENERATOR
+===================================================== */
 
-// This function creates Sonic Pi code for one block
 function generateCodeForBlock(block) {
-    const blockType = block.type;
+  let blockType = block.type;
 
-    if (blockType === "set_bpm") {
-        const bpm = block.getFieldValue("BPM");
+  /* ==========================
+       BASIC BLOCKS
+    ========================== */
 
-        return `use_bpm ${bpm}\n\n`;
-    }
+  if (blockType === "set_bpm") {
+    let bpm = block.getFieldValue("BPM");
 
-    if (blockType === "use_synth") {
-        currentSynth = block.getFieldValue("SYNTH");
-        console.log("Selected synth:", currentSynth);
-        return "";
-    }
+    return `use_bpm ${bpm}\n\n`;
+  }
 
-    if (blockType === "kick_loop") {
-        return `live_loop :kick do
+  if (blockType === "use_synth") {
+    let synth = block.getFieldValue("SYNTH");
+
+    return `use_synth :${synth}\n\n`;
+  }
+
+  if (blockType === "play_note") {
+    let note = block.getFieldValue("NOTE");
+
+    return `play :${note}\n\n`;
+  }
+
+  if (blockType === "play_sample") {
+    let sample = block.getFieldValue("SAMPLE");
+
+    return `sample :${sample}\n\n`;
+  }
+  if (blockType === "repeat_music") {
+    return `
+
+live_loop :music do
+
+  # repeated music
+
+end
+
+
+`;
+  }
+
+  if (blockType === "reverb_effect") {
+    return `
+
+with_fx :reverb do
+
+end
+
+
+`;
+  }
+
+  /* ==========================
+       TECHNO GENERATORS
+    ========================== */
+
+  if (blockType === "hard_kick_pattern") {
+    return `
+
+live_loop :hard_kick do
+
   sample :bd_haus
-  sleep 1
+
+  sleep 0.5
+
 end
 
+
 `;
-    }
+  }
 
-    if (blockType === "hihat_loop") {
-        const sleepValue = block.getFieldValue("SLEEP");
+  if (blockType === "techno_bassline") {
+    return `
 
-        return `live_loop :hihat do
+live_loop :techno_bass do
+
+  use_synth :tb303
+
+  play :e2
+
+  sleep 0.5
+
+end
+
+
+`;
+  }
+
+  if (blockType === "industrial_hihat") {
+    return `
+
+live_loop :industrial_hat do
+
   sample :drum_cymbal_closed
-  sleep ${sleepValue}
+
+  sleep 0.25
+
 end
 
+
 `;
-    }
+  }
 
-    if (blockType === "bass_loop") {
-        const note = block.getFieldValue("NOTE");
+  if (blockType === "techno_build_up") {
+    return `
 
-        console.log("Bass uses:", currentSynth);
+with_fx :reverb do
 
-        return `live_loop :bass do
-  use_synth :${currentSynth}
-  play :${note}
+  play_pattern_timed [
+
+  :c4,:e4,:g4,:c5
+
+  ],
+
+  [0.25]
+
+end
+
+
+`;
+  }
+
+  /* ==========================
+       HOUSE GENERATORS
+    ========================== */
+
+  if (blockType === "four_floor_kick") {
+    return `
+
+live_loop :house_kick do
+
+  sample :bd_haus
+
   sleep 1
+
 end
 
+
 `;
-    }
+  }
 
-    if (blockType === "house_kick_loop") {
-        return `live_loop :house_kick do
-      sample :bd_haus
-      sleep 1
-    end
+  if (blockType === "house_clap_groove") {
+    return `
 
-    `;
-    }
+live_loop :house_clap do
 
+  sample :perc_snap
 
-    if (blockType === "clap_loop") {
-        return `live_loop :clap do
-      sleep 1
-      sample :perc_snap
-      sleep 1
-    end
+  sleep 1
 
-    `;
-    }
+end
 
 
-    if (blockType === "minor7_chord_loop") {
-        return `live_loop :chords do
-      use_synth :${currentSynth}
-      play_chord chord(:e3, :minor7)
-      sleep 2
-    end
+`;
+  }
 
-    `;
-    }
+  if (blockType === "house_chord_progression") {
+    return `
 
-    if (blockType === "ambient_pad_loop") {
-        return `live_loop :ambient_pad do
-      with_fx :reverb, room: 1, mix: 0.7 do
-        use_synth :${currentSynth}
-        play_chord chord(:e3, :minor7)
+live_loop :house_chords do
 
-      end
-      sleep 4
-    end
+  play_chord [
 
-    `;
-    }
+  :c4,:e4,:g4
 
-    if (blockType === "ambient_note_loop") {
-        const note = block.getFieldValue("NOTE");
+  ]
 
-        return `live_loop :ambient_note do
-      with_fx :reverb, room: 1, mix: 0.6 do
-        use_synth :${currentSynth}
-        play :${note}, release: 2
-     
-      end
-      sleep 4
-    end
+  sleep 2
 
-    `;
-    }
+end
 
-    if (blockType === "repeat_music") {
-        const times = block.getFieldValue("TIMES");
-        const insideBlock = block.getInputTargetBlock("DO");
 
-        let insideCode = "";
+`;
+  }
 
-        if (insideBlock !== null) {
-            insideCode = generateCodeFromBlockStack(insideBlock);
-        }
+  if (blockType === "groove_bass") {
+    return `
 
-        return `${times}.times do
-    ${insideCode}end
+live_loop :house_bass do
 
-    `;
-    }
+  use_synth :bass_foundation
 
-    if (blockType === "reverb_effect") {
-        const insideBlock = block.getInputTargetBlock("DO");
+  play :c2
 
-        let insideCode = "";
+  sleep 0.5
 
-        if (insideBlock !== null) {
-            insideCode = generateCodeFromBlockStack(insideBlock);
-        }
+end
 
-        return `with_fx :reverb, room: 1, mix: 0.7 do
-    ${insideCode}end
 
-    `;
-    }
+`;
+  }
 
-    if (blockType === "play_note") {
-        const note = block.getFieldValue("NOTE");
-        const sleepValue = block.getFieldValue("SLEEP");
+  /* ==========================
+       AMBIENT GENERATORS
+    ========================== */
 
-        return `play :${note}
-    sleep ${sleepValue}
+  if (blockType === "pad_layer") {
+    return `
 
-    `;
-    }
+live_loop :ambient_pad do
 
-    if (blockType === "random_note") {
-        return `use_synth :${currentSynth}
-    play choose([:c4, :d4, :e4, :g4, :a4])
-    sleep 0.5
+  use_synth :hollow
 
-    `;
-    }
+  play :c4
 
-    if (blockType === "experimental_rhythm") {
-        return `live_loop :experimental_rhythm do
-      sample :bd_haus
-      sleep choose([0.25, 0.5, 0.75, 1])
-      sample :drum_cymbal_closed
-      sleep choose([0.25, 0.5, 1])
-    end
+  sleep 4
 
-    `;
-    }
+end
 
-    return "";
+
+`;
+  }
+
+  if (blockType === "ambient_texture") {
+    return `
+
+live_loop :texture do
+
+  sample :ambi_soft_buzz
+
+  sleep 8
+
+end
+
+
+`;
+  }
+
+  if (blockType === "slow_melody") {
+    return `
+
+live_loop :slow_melody do
+
+  play_pattern_timed [
+
+  :c4,:e4,:g4
+
+  ],
+
+  [2,2,4]
+
+end
+
+
+`;
+  }
+
+  if (blockType === "reverb_space") {
+    return `
+
+with_fx :reverb,
+
+room: 1 do
+
+end
+
+
+`;
+  }
+
+  /* ==========================
+       EXPERIMENTAL GENERATORS
+    ========================== */
+
+  if (blockType === "random_rhythm") {
+    return `
+
+live_loop :random_rhythm do
+
+  sample :bd_haus
+
+  sleep [0.25,0.5,1].choose
+
+end
+
+
+`;
+  }
+
+  if (blockType === "random_notes") {
+    return `
+
+live_loop :random_notes do
+
+  play scale(:c4,:minor).choose
+
+  sleep 0.5
+
+end
+
+
+`;
+  }
+
+  if (blockType === "effect_chain") {
+    return `
+
+with_fx :echo do
+
+  with_fx :reverb do
+
+  end
+
+end
+
+
+`;
+  }
+
+  if (blockType === "noise_texture") {
+    return `
+
+live_loop :noise do
+
+  sample :vinyl_hiss
+
+  sleep 8
+
+end
+
+
+`;
+  }
+
+  return "";
 }
 
+/* =====================================================
+   COPY CODE BUTTON
+===================================================== */
 
-// ==============================
-// Copy Button
-// ==============================
+document.addEventListener("DOMContentLoaded", function () {
+  const copyButton = document.getElementById("copyButton");
 
-function copyGeneratedCode() {
-    const outputBox = document.getElementById("output");
-    const copyButton = document.getElementById("copyButton");
+  if (copyButton) {
+    copyButton.addEventListener("click", function () {
+      let code = document.getElementById("output").textContent;
 
-    const codeText = outputBox.textContent;
-
-    navigator.clipboard.writeText(codeText).then(function () {
-        copyButton.textContent = "Copied!";
-
-        setTimeout(function () {
-            copyButton.textContent = "Copy Code";
-        }, 1000);
-    }).catch(function () {
-        copyButton.textContent = "Copy failed";
-
-        setTimeout(function () {
-            copyButton.textContent = "Copy Code";
-        }, 1000);
+      navigator.clipboard.writeText(code);
     });
-}
+  }
+});
