@@ -1,123 +1,144 @@
-# Blockly for Music Programming with Sonic Pi
+# Blockly for Music Programming (Sonic Pi)
 
-A visual music programming environment that allows users to create Sonic Pi music using Blockly blocks.
+## Overview
 
-Instead of writing Sonic Pi code manually, users can build music patterns visually and automatically execute the generated music.
+Blockly for Music Programming is a visual music programming environment that allows users to create Sonic Pi music programs using Blockly-based blocks.
+
+Instead of manually writing Sonic Pi code, users can build musical patterns visually by selecting genres, using genre-specific blocks, and generating Sonic Pi programs automatically.
+
+The project combines a Blockly-based visual DSL, Sonic Pi code generation, and a local helper communication layer to provide a smoother music programming workflow.
 
 ---
 
 # Features
 
-- Visual music programming using Blockly
-- Genre-based music blocks
-- Sonic Pi code generation
-- Automatic Sonic Pi execution
-- Local helper communication using OSC
+## Visual Music Programming
+
+Users can create music programs using visual Blockly blocks instead of writing Sonic Pi syntax manually.
+
+## Genre-Based DSL
+
+The system provides genre-specific programming environments:
+
+- Techno
+- House
+- Ambient
+- Experimental
+
+Each genre provides relevant blocks and reduces unnecessary complexity.
+
+## Starter Programs
+
+Predefined starter programs allow users to quickly explore different music styles and understand how blocks can be combined.
+
+## Sonic Pi Code Generation
+
+Blockly structures are translated into executable Sonic Pi code automatically.
+
+## Local Helper Communication
+
+A Python Flask-based local helper connects the browser application with Sonic Pi.
+
+The helper receives generated code and communicates with Sonic Pi using OSC.
+
+## Automatic Music Execution
+
+Generated programs can be transferred directly to Sonic Pi and executed without manually copying code.
 
 ---
 
-# System Overview
+# System Workflow
 
-The system contains three parts:
+User
 
-Blockly Editor
-|
-|
-Local Helper (Python)
-|
-|
+↓
+
+Blockly Web Interface
+
+↓
+
+Blockly Code Generator
+
+↓
+
+Local Helper (Python Flask)
+
+↓
+
+OSC Communication
+
+↓
+
 Sonic Pi
-|
-|
-Music Output
 
-The local helper connects the browser application with Sonic Pi and allows generated music programs to run automatically.
+↓
 
----
-
-# Requirements
-
-Before running the project, install:
-
-- Python 3.x
-- Sonic Pi Desktop
-- Visual Studio Code
-
-Python packages:
-
-pip install flask flask-cors python-osc
+Audio Output
 
 ---
 
-# Quick Start
+# Technologies Used
 
-## 1. Start Sonic Pi
+## Frontend
 
-Open Sonic Pi and run the receiver program.
+- HTML
+- CSS
+- JavaScript
+- Blockly
 
-(See docs/SETUP.md)
+## Backend Communication
 
----
+- Python
+- Flask
+- Flask-CORS
+- python-osc
 
-## 2. Start Local Helper
+## Music Environment
 
-Open terminal:
-
-cd local-helper
-
-Run:
-
-python helper.py
-
----
-
-## 3. Start Website
-
-Open:
-
-index.html
-
-using Live Server.
-
----
-
-## 4. Create Music
-
-1. Select genre
-2. Add blocks
-3. Click Generate Code
-4. Music plays automatically
+- Sonic Pi
 
 ---
 
 # Project Structure
 
-project/
+Blockly-Sonic-Pi/
 
+│
 ├── index.html
 ├── script.js
 ├── style.css
 │
 ├── images/
 │
-└── local-helper/
-└── helper.py
+├── local-helper/
+│ └── helper.py
+│
+├── README.md
+└── SETUP.md
 
 ---
 
-# Documentation
+# Running the Project
 
-More detailed information:
+For installation and execution instructions, see:
 
-- Architecture → docs/ARCHITECTURE.md
-- Setup Guide → docs/SETUP.md
-- Development Notes → docs/DEVELOPMENT.md
+[SETUP.md](SETUP.md)
 
 ---
 
 # Future Improvements
 
-- More genres
-- More music blocks
-- Better live loop management
-- Save/load projects
+Possible improvements include:
+
+- More genre-specific blocks
+- Additional music samples and effects
+- Improved live loop management
+- Saving and loading Blockly projects
+- Enhanced real-time music control
+
+---
+
+# Authors
+
+Aneetta Paul  
+Chandini Bhattula
