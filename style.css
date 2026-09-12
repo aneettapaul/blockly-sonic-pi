@@ -327,6 +327,30 @@ button {
   padding: 10px 20px 40px;
 }
 
+.main-action-button {
+  background: #14b8a6;
+
+  color: white;
+
+  border: none;
+
+  padding: 12px 35px;
+
+  border-radius: 10px;
+
+  font-size: 16px;
+
+  font-weight: bold;
+
+  cursor: pointer;
+
+  transition: 0.2s;
+}
+
+.main-action-button:hover {
+  background: #0d9488;
+}
+
 /* ==============================
    DEFAULT BLOCKLY INTERNAL STYLE
 ================================= */
@@ -388,7 +412,8 @@ body.techno-theme .right-panel {
 
 body.techno-theme .genre-card.active,
 body.techno-theme #generateButton,
-body.techno-theme #copyButton {
+body.techno-theme #copyButton,
+body.techno-theme #runButton {
   background: #b30000;
 
   border-color: #ff3b3b;
@@ -396,7 +421,8 @@ body.techno-theme #copyButton {
 
 body.techno-theme .genre-card.active:hover,
 body.techno-theme #generateButton:hover,
-body.techno-theme #copyButton:hover {
+body.techno-theme #copyButton:hover,
+body.techno-theme #runButton:hover {
   background: #ff3b3b;
 }
 
@@ -536,9 +562,10 @@ body.house-theme #starterButton:hover {
   background: rgba(251, 191, 36, 0.18);
 }
 
-/* Generate / Copy Buttons */
+/* Generate / Run / Copy Buttons */
 
 body.house-theme #generateButton,
+body.house-theme #runButton,
 body.house-theme #copyButton {
   background: #f97316;
 
@@ -546,6 +573,7 @@ body.house-theme #copyButton {
 }
 
 body.house-theme #generateButton:hover,
+body.house-theme #runButton:hover,
 body.house-theme #copyButton:hover {
   background: #fb923c;
 }
@@ -628,12 +656,14 @@ body.ambient-theme .genre-card.active {
 }
 
 body.ambient-theme #generateButton,
-body.ambient-theme #copyButton {
+body.ambient-theme #copyButton,
+body.ambient-theme #runButton {
   background: #0891b2;
 }
 
 body.ambient-theme #generateButton:hover,
-body.ambient-theme #copyButton:hover {
+body.ambient-theme #copyButton:hover,
+body.ambient-theme #runButton:hover {
   background: #22d3ee;
 }
 
@@ -749,17 +779,19 @@ body.experimental-theme #starterButton:hover {
   background: rgba(0, 229, 255, 0.15);
 }
 
-/* Generate / Copy buttons */
+/* Generate / Copy buttons / Run buttons */
 
 body.experimental-theme #generateButton,
-body.experimental-theme #copyButton {
+body.experimental-theme #copyButton,
+body.experimental-theme #runButton {
   background: #db2777;
 
   border: 1px solid #f472b6;
 }
 
 body.experimental-theme #generateButton:hover,
-body.experimental-theme #copyButton:hover {
+body.experimental-theme #copyButton:hover,
+body.experimental-theme #runButton:hover {
   background: #f472b6;
 }
 

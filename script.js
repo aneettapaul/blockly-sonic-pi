@@ -3,6 +3,7 @@
 ===================================================== */
 
 let workspace;
+let generatedCode = "";
 
 let selectedGenre = "techno";
 
@@ -761,11 +762,26 @@ document.addEventListener("DOMContentLoaded", function () {
     generateButton.addEventListener("click", function (event) {
       event.preventDefault();
 
-      let code = generateWorkspaceCode();
+      generatedCode = generateWorkspaceCode();
 
-      document.getElementById("output").textContent = code;
+      document.getElementById("output").textContent = generatedCode;
+    });
+  }
+});
 
-      sendCodeToHelper(code);
+document.addEventListener("DOMContentLoaded", function () {
+  const runButton = document.getElementById("runButton");
+
+  if (runButton) {
+    runButton.addEventListener("click", function (event) {
+      event.preventDefault();
+
+      if (generatedCode === "") {
+        alert("Please generate code first");
+        return;
+      }
+
+      sendCodeToHelper(generatedCode);
     });
   }
 });
@@ -1156,9 +1172,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
   if (copyButton) {
     copyButton.addEventListener("click", function () {
-      let code = document.getElementById("output").textContent;
+      navigator.clipboard.writeText(generatedCode);
 
-      navigator.clipboard.writeText(code);
+      copyButton.textContent = "✓";
+
+      setTimeout(() => {
+        copyButton.textContent = "📋";
+      }, 1500);
     });
   }
 });
